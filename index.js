@@ -142,6 +142,11 @@ class Instructor extends Lambdasian {
     this.favLanguage = atts.favLanguage,
     this.catchPhrase = atts.catchPhrase
   }
+  adjust(grade) {
+    const min = -10;
+    const max = 10;
+    return grade = Math.random() * (+max - +min);
+  }
   demo(subject) {
     return `Today we are learning about ${subject}`;
   }
@@ -165,12 +170,32 @@ class Instructor extends Lambdasian {
         + `PRAssignment` a method that receives a subject as an argument and returns `student.name has submitted a PR for {subject}`
         + `sprintChallenge` similar to PRAssignment but returns `student.name has begun sprint challenge on {subject}`
 */
+/*
+  STRETCH PROBLEM (no tests!)
+    - Extend the functionality of the Student by adding a prop called grade and setting it equal to a number between 1-100.
+    - Now that our students have a grade build out a method on the Instructor (this will be used by _BOTH_ instructors and PM's) that will randomly add or subtract points to a student's grade. _Math.random_ will help.
+    - Add a graduate method to a student.
+      + This method, when called, will check the grade of the student and see if they're ready to graduate from Lambda School
+      + If the student's grade is above a 70% let them graduate! Otherwise go back to grading their assignments to increase their score.
+*/
 class Student extends Lambdasian {
   constructor(atts) {
     super(atts),
+    this.grade = Math.floor((Math.random() * 100) + 1);
+    this.graduated = false;
     this.previousBackground = atts.previousBackground,
     this.className = atts.className,
     this.favSubjects = atts.favSubjects
+  }
+  graduate(grade) {
+    if (grade/100 > 0.70) {
+      this.graduated = true;
+      return `Congrats! ${this.name} has graduated Lambda School with a ${grade}%`;
+    }
+    if (grade/100 < 0.70 && this.graduated === false) {
+      myInstructor.adjust(grade); // I had to hard code this because I couldn't figure out how to access another constructor's method
+      return `Sorry, you did not pass. Your Instructor has adjusted your work, so try again!`
+    }
   }
   listSubjects() {
     const list = this.favSubjects.toString(' ');
@@ -219,6 +244,25 @@ class ProjectManager extends Instructor {
       + This method, when called, will check the grade of the student and see if they're ready to graduate from Lambda School
       + If the student's grade is above a 70% let them graduate! Otherwise go back to grading their assignments to increase their score.
 */
+
+const newStudent = new Student ({
+  name: 'Shawn',
+  age: 26,
+  location: 'Maryland',
+  previousBackground: 'Chemistry',
+  className: 'Web 27',
+  favSubjects: 'Programming'
+});
+const myInstructor = new Instructor ({
+  name: 'Dom',
+  age: 'idk',
+  location: 'TN',
+  specialty: 'Programming',
+  favLanguage: 'React',
+  catchPhrase: "how y'all doing today?"
+});
+
+console.log(newStudent.graduate(newStudent.grade));
 
 ///////// END OF CHALLENGE /////////
 ///////// END OF CHALLENGE /////////
